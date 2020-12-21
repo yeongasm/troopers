@@ -1,30 +1,60 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
+    <div v-if="showHeader" class="flex-row flex-right flex-middle header-bar">
+      <router-link class="unanchor link" to="/update">Update Profile</router-link>&nbsp;|&nbsp;
+      <span class="link" @click="logOut">Log out</span>
+    </div>
   <router-view/>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { computed, onMounted, reactive } from 'vue'
+import Authentication from './controller/auth';
 
-#nav {
-  padding: 30px;
+export default {
+  setup() {
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    const store = useStore();
+    const router = useRouter();
+    const loginRedirect = { login: 1, create: 1 };
 
-    &.router-link-exact-active {
-      color: #42b983;
+    const getCurrentLocation = () => {
+      const url = window.location.href;
+      const segments = url.split('/');
+      const location = segments[segments.length - 1];
+      return location;
+    };
+
+    onMounted(async () => {
+      const location = getCurrentLocation();
+      let loggedIn = await Authentication.isLoggedIn();
+      if (!loggedIn) {
+        if (!loginRedirect[location])
+          router.push('/login');
+      } else {
+        store.commit('enableNavbar');
+        if (loginRedirect[location])
+          router.push('/');
+      }
+    });
+
+    const logOut = () => {
+      if (Authentication.logout()) {
+        setTimeout(() => store.commit('disableNavbar'), 1);
+        router.go();
+      }
+    };
+
+    return {
+      showHeader: computed(() => {
+        return store.state.showNavbar;
+      }),
+      logOut
     }
   }
 }
-</style>
+
+</script>
+
+<style lang="scss"></style>
