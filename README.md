@@ -1,24 +1,11 @@
-# troopers
+# Trooper Assessment
 
-## Project setup
-```
-npm install
-```
+A live demonstration of the application can be found over [here](http://trooper.herokuapp.com/login)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Tech Stack
+* Vue Js (Composition API)
+* ExpressJs
+* MySQL (Sequelize)
+* Heroku
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> The code in this repo differ slightly from the one being hosted on Heroku. Some ammendments needed to be made to make the app run on it.
